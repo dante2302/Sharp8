@@ -19,7 +19,7 @@ public class Chip8
 
     private ushort[] Stack { get; set; }
 
-    public Chip8()
+    public Chip8(IWindow window)
     {
         RomStart = 0x200;
         Memory = new byte[4096];
@@ -32,6 +32,9 @@ public class Chip8
         Stack = new ushort[16];
         StackPointer = 0;
         ProgramCounter = RomStart;
+
+        //Setup Fonts
+        Array.Copy(DefaultSprites.FontSet, Memory, 0x0);
     }
 
     public void Run(byte[] rom)
@@ -42,10 +45,19 @@ public class Chip8
             // Rom is too big
             return;
         }
-        //Setup Fonts
-        Array.Copy(DefaultSprites.FontSet, Memory, 0x0);
-
         // Setup ROM
         Array.Copy(rom, Memory, RomStart);
+    }
+
+    public void Run(string rom)
+    {
+        byte[] romBytes = File.ReadAllBytes(rom);
+        if(romBytes.Length > Memory.Length - RomStart)
+        {
+            // Print 
+            // Rom is too big
+            return;
+        }
+        Run(romBytes);
     }
 }
