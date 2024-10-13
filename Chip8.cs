@@ -7,8 +7,9 @@ public class Chip8
     private byte[] Memory { get; set; }
 
     // Registers
-    private ushort I { get; set;}
-    private byte[] V { get; set; }
+    private ushort I { get; set;}  // Special Index Register
+    private byte[] V { get; set; } // 16 Vx Registers x(0 - F);
+                                   // VF - Special Flag Register
     private byte DelayTimer { get; set; }
     private byte SoundTimer { get; set; }
 
@@ -16,7 +17,7 @@ public class Chip8
     private byte StackPointer { get; set; }
     private ushort ProgramCounter { get; set; }
 
-    private ushort[] Stack { get; set; } = new ushort[16];
+    private ushort[] Stack { get; set; }
 
     public Chip8()
     {
@@ -28,14 +29,21 @@ public class Chip8
         DelayTimer = 0;
         SoundTimer = 0;
 
+        Stack = new ushort[16];
         StackPointer = 0;
         ProgramCounter = RomStart;
     }
 
     public void Run(byte[] rom)
     {
+        if(rom.Length > Memory.Length - RomStart)
+        {
+            // Print 
+            // Rom is too big
+            return;
+        }
         //Setup Fonts
-        Array.Copy(DefaultSprites.fontSet, Memory, 0x0);
+        Array.Copy(DefaultSprites.FontSet, Memory, 0x0);
 
         // Setup ROM
         Array.Copy(rom, Memory, RomStart);
