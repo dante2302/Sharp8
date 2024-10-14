@@ -4,25 +4,30 @@ public class Chip8
 {
     // Memory
     private ushort RomStart { get; }
-    private byte[] Memory { get; set; }
+    internal byte[] Memory { get; set; }
+
+    // A 64x32 pixel screen
+    internal byte[] Gfx { get; set;}
 
     // Registers
-    private ushort I { get; set;}  // Special Index Register
-    private byte[] V { get; set; } // 16 Vx Registers x(0 - F);
+    internal ushort I { get; set;}  // Special Index Register
+    internal byte[] V { get; set; } // 16 Vx Registers x(0 - F);
                                    // VF - Special Flag Register
-    private byte DelayTimer { get; set; }
-    private byte SoundTimer { get; set; }
+    internal byte DelayTimer { get; set; }
+    internal byte SoundTimer { get; set; }
 
     // Pseudo-registers
-    private byte StackPointer { get; set; }
-    private ushort ProgramCounter { get; set; }
+    internal byte StackPointer { get; set; }
+    internal ushort ProgramCounter { get; set; }
 
-    private ushort[] Stack { get; set; }
+    internal ushort[] Stack { get; set; }
 
     public Chip8(IWindow window)
     {
         RomStart = 0x200;
         Memory = new byte[4096];
+
+        Gfx = new byte[64*32];
 
         I = 0;
         V = new byte[16];
@@ -49,9 +54,9 @@ public class Chip8
         Array.Copy(rom, Memory, RomStart);
     }
 
-    public void Run(string rom)
+    public void Run(string romPath)
     {
-        byte[] romBytes = File.ReadAllBytes(rom);
+        byte[] romBytes = File.ReadAllBytes(romPath);
         if(romBytes.Length > Memory.Length - RomStart)
         {
             // Print 
@@ -59,5 +64,22 @@ public class Chip8
             return;
         }
         Run(romBytes);
+    }
+
+    public void EmulateCycle()
+    {
+        // Opcodes are 2 bytes
+        // FirstByte << 8 - Makes space for the 2nd byte
+        // Bitwise OR combines the bytes
+        ushort opCode = (ushort)(Memory[ProgramCounter] << 8 | Memory[ProgramCounter + 1]);
+
+        switch(opCode & 0xF000)
+        {
+            case 0x0000 when opCode == 0x00E0:
+                break;
+            default:
+                Console.WriteLine("Unkonw Opcode");
+                break;
+        }
     }
 }
