@@ -76,6 +76,7 @@ public class Chip8
         switch(opCode & 0xF000)
         {
             case 0x0000 when opCode == 0x00E0:
+                OpCodes._00E0(this);
                 break;
             default:
                 Console.WriteLine("Unkonw Opcode");
