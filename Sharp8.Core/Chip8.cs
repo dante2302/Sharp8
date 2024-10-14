@@ -4,23 +4,23 @@ public class Chip8
 {
     // Memory
     private ushort RomStart { get; }
-    internal byte[] Memory { get; set; }
+    public byte[] Memory { get; set; }
 
     // A 64x32 pixel screen
-    internal byte[] Gfx { get; set;}
+    public byte[] Gfx { get; set;}
 
     // Registers
-    internal ushort I { get; set;}  // Special Index Register
-    internal byte[] V { get; set; } // 16 Vx Registers x(0 - F);
+    public ushort I { get; set;}  // Special Index Register
+    public byte[] V { get; set; } // 16 Vx Registers x(0 - F);
                                    // VF - Special Flag Register
-    internal byte DelayTimer { get; set; }
-    internal byte SoundTimer { get; set; }
+    public byte DelayTimer { get; set; }
+    public byte SoundTimer { get; set; }
 
     // Pseudo-registers
-    internal byte StackPointer { get; set; }
-    internal ushort ProgramCounter { get; set; }
+    public byte StackPointer { get; set; }
+    public ushort ProgramCounter { get; set; }
 
-    internal ushort[] Stack { get; set; }
+    public ushort[] Stack { get; set; }
 
     public Chip8(IWindow window)
     {
@@ -51,7 +51,7 @@ public class Chip8
             return;
         }
         // Setup ROM
-        Array.Copy(rom, Memory, RomStart);
+        Array.Copy(rom,0, Memory, RomStart, rom.Length);
     }
 
     public void Run(string romPath)
@@ -79,7 +79,7 @@ public class Chip8
                 OpCodes._00E0(this);
                 break;
             default:
-                Console.WriteLine("Unkonw Opcode");
+                Console.WriteLine("Unknown Opcode");
                 break;
         }
     }
