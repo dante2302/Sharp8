@@ -110,6 +110,74 @@ public class Chip8
                 OpCodes._6xkk(this, x, kk);
                 break;
 
+            case 0x8000 when (opCode & 0x000F) == 0:
+                OpCodes._8xy0(this, x, y);
+                break;
+
+            case 0x8000 when (opCode & 0x000F) == 1:
+                OpCodes._8xy1(this, x, y);
+                break;
+
+            case 0x8000 when (opCode & 0x000F) == 2:
+                OpCodes._8xy2(this, x, y);
+                break;
+
+            case 0x8000 when (opCode & 0x000F) == 3:
+                OpCodes._8xy3(this, x, y);
+                break;
+
+            case 0x8000 when (opCode & 0x000F) == 4:
+                OpCodes._8xy4(this, x, y);
+                break;
+
+            case 0x8000 when (opCode & 0x000F) == 5:
+                OpCodes._8xy5(this, x, y);
+                break;
+
+            case 0x8000 when (opCode & 0x000F) == 6:
+                OpCodes._8xy6(this, x, y);
+                break;
+
+            case 0x8000 when (opCode & 0x000F) == 0xE:
+                OpCodes._8xyE(this, x, y);
+                break;
+
+            case 0x9000:
+                OpCodes._9xy0(this, x, y);
+                break;
+
+            case 0xE000 when (opCode & 0xFF)  == 0x9E:
+                OpCodes._Ex9E(this);
+                break;
+
+            case 0xE000 when (opCode & 0xFF)  == 0xA1:
+                OpCodes._ExA1(this);
+                break;
+
+            case 0xF000 when (opCode & 0xFF ) == 0x07:
+                OpCodes._Fx07(this, x);
+                break;
+
+            case 0xF000 when (opCode & 0xFF ) == 0x0A:
+                OpCodes._Fx0A(this);
+                break;
+
+            case 0xF000 when (opCode & 0xFF ) == 0x15:
+                OpCodes._Fx15(this, x);
+                break;
+
+            case 0xF000 when (opCode & 0xFF ) == 0x18:
+                OpCodes._Fx18(this, x);
+                break;
+
+            case 0xF000 when (opCode & 0xFF ) == 0x1E:
+                OpCodes._Fx1E(this, x);
+                break;
+
+            case 0xF000 when (opCode & 0xFF ) == 0x29:
+                OpCodes._Fx29(this, x);
+                break;
+
             default:
                 Console.WriteLine("Unknown Opcode");
                 break;
