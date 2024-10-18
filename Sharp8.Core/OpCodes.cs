@@ -147,4 +147,51 @@ public class OpCodes()
         if(chip8.V[x] != chip8.V[y])
             chip8.ProgramCounter += 2;
     }
+
+    // Ex and Fx BLOCK
+
+    public static void _Ex9E(Chip8 chip8) 
+    {
+        // // Yet To Implement
+        // bool keyIsPressed;
+        // if(keyIsPressed)
+        //     chip8.ProgramCounter += 2;
+    }
+
+    public static void _ExA1(Chip8 chip8)
+    {
+        // // Yet To Implement
+        // bool keyIsPressed;
+        // if(!keyIsPressed)
+        //     chip8.ProgramCounter += 2;
+    }
+
+    public static void _Fx07(Chip8 chip8, byte x)
+    {
+        chip8.V[x] = chip8.DelayTimer;
+    }
+
+    public static void _Fx0A(Chip8 chip8)
+    {
+    }
+
+    public static void _Fx15(Chip8 chip8, byte x)
+    {
+        chip8.DelayTimer = chip8.V[x];
+    }
+
+    public static void _Fx18(Chip8 chip8, byte x)
+    {
+        chip8.SoundTimer = chip8.V[x];
+    }
+
+    public static void _Fx1E(Chip8 chip8, byte x)
+    {
+        chip8.I = (ushort)(chip8.V[x] + chip8.I);
+    }
+
+    public static void _Fx29(Chip8 chip8, byte x)
+    {
+        chip8.I = (byte)(chip8.V[x] * 5);
+    }
 }

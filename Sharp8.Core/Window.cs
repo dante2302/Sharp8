@@ -67,5 +67,4 @@ public class Window : GameWindow, IWindow
         base.OnClosing(e);
         Environment.Exit(0);
     }
-
 }
