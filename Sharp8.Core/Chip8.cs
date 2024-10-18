@@ -98,6 +98,14 @@ public class Chip8
                 OpCodes._2nnn(this, nnn);
                 break;
 
+            case 0xA000:
+                OpCodes._Annn(this, nnn);
+                break;
+
+            case 0xB000:
+                OpCodes._Bnnn(this, nnn);
+                break;
+
             case 0x3000:
                 OpCodes._3xkk(this, x, kk);
                 break;
@@ -108,6 +116,14 @@ public class Chip8
 
             case 0x6000:
                 OpCodes._6xkk(this, x, kk);
+                break;
+
+            case 0x7000:
+                OpCodes._7xkk(this, x, kk);
+                break;
+
+            case 0xC000:
+                OpCodes._Cxkk(this, x, kk);
                 break;
 
             case 0x8000 when (opCode & 0x000F) == 0:
