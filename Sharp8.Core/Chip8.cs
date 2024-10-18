@@ -12,7 +12,7 @@ public class Chip8
     // Registers
     public ushort I { get; set;}  // Special Index Register
     public byte[] V { get; set; } // 16 Vx Registers x(0 - F);
-                                   // VF - Special Flag Register
+                                  // VF - Special Flag Register
     public byte DelayTimer { get; set; }
     public byte SoundTimer { get; set; }
 
@@ -77,6 +77,7 @@ public class Chip8
         byte kk = (byte)(opCode & 0x00FF);
         byte x = (byte)(opCode & 0x0F00);
         byte y = (byte)(opCode & 0x00F0);
+
         ProgramCounter += 2;
 
         switch(opCode & 0xF000)
@@ -100,6 +101,15 @@ public class Chip8
             case 0x3000:
                 OpCodes._3xkk(this, x, kk);
                 break;
+
+            case 0x4000:
+                OpCodes._4xkk(this, x, kk);
+                break;
+
+            case 0x6000:
+                OpCodes._6xkk(this, x, kk);
+                break;
+
             default:
                 Console.WriteLine("Unknown Opcode");
                 break;

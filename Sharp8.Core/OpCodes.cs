@@ -1,3 +1,5 @@
+using Microsoft.VisualBasic;
+
 namespace Sharp8;
 
 public class OpCodes()
@@ -68,4 +70,81 @@ public class OpCodes()
     }
 
     // END OF KK BLOCK
+
+    // XY BLOCK
+
+    public static void _5xy0(Chip8 chip8, byte x, byte y)
+    {
+        if(chip8.V[x] == chip8.V[y]) 
+            chip8.ProgramCounter += 2;
+    }
+
+    public static void _8xy0(Chip8 chip8, byte x, byte y)
+    {
+        chip8.V[x] = chip8.V[y];
+    }
+
+    public static void _8xy1(Chip8 chip8, byte x, byte y)
+    {
+        chip8.V[x] = (byte)(chip8.V[x] | chip8.V[y]);
+    }
+
+    public static void _8xy2(Chip8 chip8, byte x, byte y)
+    {
+        chip8.V[x] = (byte)(chip8.V[x] & chip8.V[y]);
+    }
+
+    public static void _8xy3(Chip8 chip8, byte x, byte y)
+    {
+        chip8.V[x] = (byte)(chip8.V[x] ^ chip8.V[y]);
+    }
+
+    public static void _8xy4(Chip8 chip8, byte x, byte y)
+    {
+        ushort sum = (ushort)(chip8.V[x] + chip8.V[y]);
+        if(sum > 255)
+            chip8.V[0xF] = (byte)(sum - 255);
+        chip8.V[x] = (byte)(sum & 0xFF);
+    }
+
+    public static void _8xy5(Chip8 chip8, byte x, byte y)
+    {
+        if(chip8.V[y] > chip8.V[x])
+            chip8.V[0xF] = 1;
+        else  
+            chip8.V[0xF] = 0;
+        
+        chip8.V[x] = (byte)(chip8.V[y] - chip8.V[x]);
+    }
+
+    public static void _8xy6(Chip8 chip8, byte x, byte y)
+    {
+        chip8.V[0xF] = (byte)(chip8.V[x] & 0x1);
+        chip8.V[x] >>= 0x1;
+    }
+
+    public static void _8xy7(Chip8 chip8, byte x, byte y)
+    {
+        if(chip8.V[y] > chip8.V[x])
+            chip8.V[0xF] = 1;
+        else  
+            chip8.V[0xF] = 0;
+        
+        chip8.V[x] = (byte)(chip8.V[x] - chip8.V[y]);
+    }
+
+    public static void _8xyE(Chip8 chip8, byte x, byte y)
+    {
+        // Mask the most significant bit and shift it to the start
+        // If its 1 then VF is 1
+        // Else 0
+        chip8.V[0xF] = (byte)((Helpers.MsbByteMask & chip8.V[x]) >> 7);
+        chip8.V[x] <<= 0x1;
+    }
+
+    public static void _9xy0(Chip8 chip8, byte x, byte y)
+    {
+        if(chip8.V[x] != chip8.V[y])
+            chip8.ProgramCounter += 2;
+    }
 }
