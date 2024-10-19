@@ -63,7 +63,7 @@ public class OpCodes()
 
     public static void _Cxkk(Chip8 chip8, byte x, byte kk)
     {
-        byte randomNumber = (byte)(new Random().Next(0, 256));
+        byte randomNumber = (byte) new Random().Next(0, 256);
         chip8.V[x] = (byte)(randomNumber & kk);
     }
 
