@@ -75,8 +75,8 @@ public class Chip8
 
         ushort nnn = (ushort)(opCode & 0x0FFF);
         byte kk = (byte)(opCode & 0x00FF);
-        byte x = (byte)(opCode & 0x0F00);
-        byte y = (byte)(opCode & 0x00F0);
+        byte x = (byte)((opCode & 0x0F00) >> 8);
+        byte y = (byte)((opCode & 0x00F0) >> 4);
 
         ProgramCounter += 2;
 
@@ -192,6 +192,18 @@ public class Chip8
 
             case 0xF000 when (opCode & 0xFF ) == 0x29:
                 OpCodes._Fx29(this, x);
+                break;
+            
+            case 0xF000 when (opCode & 0xFF) == 0x33:
+                OpCodes._Fx33(this, x);
+                break;
+
+            case 0xF000 when (opCode & 0xFF ) == 0x55:
+                OpCodes._Fx55(this, x);
+                break;
+
+            case 0xF000 when (opCode & 0xFF ) == 0x65:
+                OpCodes._Fx65(this, x);
                 break;
 
             default:

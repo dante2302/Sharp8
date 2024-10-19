@@ -1,5 +1,3 @@
-using Microsoft.VisualBasic;
-
 namespace Sharp8;
 
 public class OpCodes()
@@ -194,4 +192,36 @@ public class OpCodes()
     {
         chip8.I = (byte)(chip8.V[x] * 5);
     }
+
+    public static void _Fx33(Chip8 chip8, byte x)
+    {
+        int value = chip8.V[x];
+        byte firstDigit = (byte)(value / 100);
+        byte secondDigit = (byte)(value / 10 % 10);
+        byte thirdDigit = (byte)(value % 10);
+
+        chip8.Memory[chip8.I] = firstDigit;
+        chip8.Memory[chip8.I+1] = secondDigit;
+        chip8.Memory[chip8.I+2] = thirdDigit;
+    }
+
+    public static void _Fx55(Chip8 chip8, byte x)
+    {
+        ushort tempI = chip8.I;
+        for(int i = 0; i < x; i++, tempI++)
+        {
+            chip8.Memory[tempI] = chip8.V[i];
+        }
+    }
+
+    public static void _Fx65(Chip8 chip8, byte x)
+    {
+        ushort tempI = chip8.I;
+        for(int i = 0; i < x; i++, tempI++)
+        {
+            chip8.V[i] = chip8.Memory[tempI];
+        }
+    }
+
+
 }
