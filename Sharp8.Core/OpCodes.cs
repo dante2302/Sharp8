@@ -63,7 +63,7 @@ public class OpCodes()
 
     public static void _Cxkk(Chip8 chip8, byte x, byte kk)
     {
-        byte randomNumber = (byte) new Random().Next(0, 256);
+        byte randomNumber = (byte)new Random().Next(0, 256);
         chip8.V[x] = (byte)(randomNumber & kk);
     }
 
@@ -73,7 +73,7 @@ public class OpCodes()
 
     public static void _5xy0(Chip8 chip8, byte x, byte y)
     {
-        if(chip8.V[x] == chip8.V[y]) 
+        if (chip8.V[x] == chip8.V[y])
             chip8.ProgramCounter += 2;
     }
 
@@ -100,18 +100,18 @@ public class OpCodes()
     public static void _8xy4(Chip8 chip8, byte x, byte y)
     {
         ushort sum = (ushort)(chip8.V[x] + chip8.V[y]);
-        if(sum > 255)
+        if (sum > 255)
             chip8.V[0xF] = (byte)(sum - 255);
         chip8.V[x] = (byte)(sum & 0xFF);
     }
 
     public static void _8xy5(Chip8 chip8, byte x, byte y)
     {
-        if(chip8.V[y] > chip8.V[x])
+        if (chip8.V[y] > chip8.V[x])
             chip8.V[0xF] = 1;
-        else  
+        else
             chip8.V[0xF] = 0;
-        
+
         chip8.V[x] = (byte)(chip8.V[y] - chip8.V[x]);
     }
 
@@ -123,11 +123,11 @@ public class OpCodes()
 
     public static void _8xy7(Chip8 chip8, byte x, byte y)
     {
-        if(chip8.V[y] > chip8.V[x])
+        if (chip8.V[y] > chip8.V[x])
             chip8.V[0xF] = 1;
-        else  
+        else
             chip8.V[0xF] = 0;
-        
+
         chip8.V[x] = (byte)(chip8.V[x] - chip8.V[y]);
     }
 
@@ -142,13 +142,13 @@ public class OpCodes()
 
     public static void _9xy0(Chip8 chip8, byte x, byte y)
     {
-        if(chip8.V[x] != chip8.V[y])
+        if (chip8.V[x] != chip8.V[y])
             chip8.ProgramCounter += 2;
     }
 
     // Ex and Fx BLOCK
 
-    public static void _Ex9E(Chip8 chip8) 
+    public static void _Ex9E(Chip8 chip8)
     {
         // // Yet To Implement
         // bool keyIsPressed;
@@ -201,14 +201,14 @@ public class OpCodes()
         byte thirdDigit = (byte)(value % 10);
 
         chip8.Memory[chip8.I] = firstDigit;
-        chip8.Memory[chip8.I+1] = secondDigit;
-        chip8.Memory[chip8.I+2] = thirdDigit;
+        chip8.Memory[chip8.I + 1] = secondDigit;
+        chip8.Memory[chip8.I + 2] = thirdDigit;
     }
 
     public static void _Fx55(Chip8 chip8, byte x)
     {
         ushort tempI = chip8.I;
-        for(int i = 0; i < x; i++, tempI++)
+        for (int i = 0; i < x; i++, tempI++)
         {
             chip8.Memory[tempI] = chip8.V[i];
         }
@@ -217,11 +217,38 @@ public class OpCodes()
     public static void _Fx65(Chip8 chip8, byte x)
     {
         ushort tempI = chip8.I;
-        for(int i = 0; i < x; i++, tempI++)
+        for (int i = 0; i < x; i++, tempI++)
         {
             chip8.V[i] = chip8.Memory[tempI];
         }
     }
 
+    public static void _Dxyn(Chip8 chip8, byte x, byte y, byte n)
+    {
+        chip8.V[0xF] = 0;
 
+        for (int line = 0; line < n; line++)
+        {
+            var yCord = (chip8.V[n] + line) % 32;
+
+            byte spriteByte = chip8.Memory[chip8.I + line];
+
+            for (int column = 0; column < 8; column++)
+            {
+                if ((spriteByte & 0x80) != 0)
+                {
+                    var xCord = (chip8.V[x] + column) % 64;
+
+                    if (chip8.Gfx[yCord * 64 + xCord] == 1)
+                    {
+                        chip8.V[0xF] = 1;
+                    }
+
+                    chip8.Gfx[y * 64 + x] ^= 1;
+                }
+
+                spriteByte <<= 0x1;
+            }
+        }
+    }
 }

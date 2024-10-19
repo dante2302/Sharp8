@@ -77,6 +77,7 @@ public class Chip8
         byte kk = (byte)(opCode & 0x00FF);
         byte x = (byte)((opCode & 0x0F00) >> 8);
         byte y = (byte)((opCode & 0x00F0) >> 4);
+        byte n = (byte)(opCode & 0x000F);
 
         ProgramCounter += 2;
 

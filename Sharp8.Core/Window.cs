@@ -19,7 +19,6 @@ public class Window : GameWindow, IWindow
     {
         string rom = args.FileNames[0];
 
-        // Start Chip8;
         chip8.Run(rom);
     }
 
