@@ -30,7 +30,7 @@ public class Debugger(Chip8 chip8)
             output.Append('|');
             for (int j = 0; j < 64; j++)
             {
-                output.Append(Gfx[i * 64 + j] > 0 ? "█" : " ");
+                output.Append(Gfx[i * 64 + j] > 0 ? $"{i*64+j}█" : " ");
             }
             output.AppendLine("|");
         }
@@ -59,5 +59,25 @@ public class Debugger(Chip8 chip8)
         }
 
         Console.WriteLine(output);
+    }
+
+    public void DebugRegister(ushort opCode)
+    {
+        int I = chip8.I;
+        int PC = chip8.ProgramCounter;
+        int SP = chip8.StackPointer;
+
+            var output = new StringBuilder();
+            output.AppendLine($"PC              0x{PC:X4}");
+            output.AppendLine($"OpCode          0x{opCode:X4}");
+            output.AppendLine($"I               0x{I:X4}");
+            output.AppendLine($"sp              0x{SP:X4}");
+
+            foreach(var register in Enumerable.Range(0, 16)) {
+                output.AppendLine($"V{register:X}              0x{chip8.V[register]:X2}");
+            }
+
+
+            Console.WriteLine(output);
     }
 }

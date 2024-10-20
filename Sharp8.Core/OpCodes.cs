@@ -108,12 +108,12 @@ public class OpCodes()
 
     public static void _8xy5(Chip8 chip8, byte x, byte y)
     {
-        if (chip8.V[y] > chip8.V[x])
+        if (chip8.V[x] > chip8.V[y])
             chip8.V[0xF] = 1;
         else
             chip8.V[0xF] = 0;
 
-        chip8.V[x] = (byte)(chip8.V[y] - chip8.V[x]);
+        chip8.V[x] = (byte)(chip8.V[x] - chip8.V[y]);
     }
 
     public static void _8xy6(Chip8 chip8, byte x, byte y)
@@ -198,7 +198,6 @@ public class OpCodes()
         byte firstDigit = (byte)(value / 100);
         byte secondDigit = (byte)((value / 10) % 10);
         byte thirdDigit = (byte)(value % 10);
-
         chip8.Memory[chip8.I] = firstDigit;
         chip8.Memory[chip8.I + 1] = secondDigit;
         chip8.Memory[chip8.I + 2] = thirdDigit;
@@ -206,19 +205,17 @@ public class OpCodes()
 
     public static void _Fx55(Chip8 chip8, byte x)
     {
-        ushort tempI = chip8.I;
-        for (int i = 0; i < x; i++, tempI++)
+        for (int i = 0; i <= x; i++)
         {
-            chip8.Memory[tempI] = chip8.V[i];
+            chip8.Memory[chip8.I+i] = chip8.V[i];
         }
     }
 
     public static void _Fx65(Chip8 chip8, byte x)
     {
-        ushort tempI = chip8.I;
-        for (int i = 0; i < x; i++, tempI++)
+        for (int i = 0; i <= x; i++)
         {
-            chip8.V[i] = chip8.Memory[tempI];
+            chip8.V[i] = chip8.Memory[chip8.I+i];
         }
     }
 
@@ -228,7 +225,7 @@ public class OpCodes()
 
         for (int line = 0; line < n; line++)
         {
-            var yCord = (chip8.V[n] + line) % 32;
+            var yCord = (chip8.V[y] + line) % 32;
 
             byte spriteByte = chip8.Memory[chip8.I + line];
 

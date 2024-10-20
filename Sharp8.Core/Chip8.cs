@@ -17,7 +17,6 @@ public class Chip8
     public byte DelayTimer { get; set; }
     public byte SoundTimer { get; set; }
 
-    // Pseudo-registers
     public byte StackPointer { get; set; }
     public ushort ProgramCounter { get; set; }
 
@@ -81,12 +80,12 @@ public class Chip8
         byte y = (byte)((opCode & 0x00F0) >> 4);
         byte n = (byte)(opCode & 0x000F);
 
-
+        // Console.WriteLine($"OpCode: {opCode:X4}");
+        // Console.ReadLine();
         switch (opCode & 0xF000)
         {
             case 0x0000 when opCode == 0x00E0:
                 OpCodes._00E0(this);
-                _window.Render();
                 break;
 
             case 0x0000 when opCode == 0x00EE:
