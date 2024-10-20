@@ -1,7 +1,11 @@
+using System.Text;
+using OpenTK.Graphics.ES11;
+
 namespace Sharp8;
 
 public class Chip8
 {
+    private IWindow _window;
     // Memory
     private ushort RomStart { get; }
     public byte[] Memory { get; set; }
@@ -24,6 +28,7 @@ public class Chip8
 
     public Chip8(IWindow window)
     {
+        _window = window;
         RomStart = 0x200;
         Memory = new byte[4096];
 
@@ -39,15 +44,14 @@ public class Chip8
         ProgramCounter = RomStart;
 
         //Setup Fonts
-        Array.Copy(DefaultSprites.FontSet, Memory, 0x0);
+        Array.Copy(DefaultSprites.FontSet, 0, Memory, 0x0, DefaultSprites.FontSet.Length);
     }
+
 
     public void Run(byte[] rom)
     {
         if(rom.Length > Memory.Length - RomStart)
         {
-            // Print 
-            // Rom is too big
             return;
         }
         // Setup ROM
@@ -59,19 +63,20 @@ public class Chip8
         byte[] romBytes = File.ReadAllBytes(romPath);
         if(romBytes.Length > Memory.Length - RomStart)
         {
-            // Print 
-            // Rom is too big
             return;
         }
         Run(romBytes);
     }
+
 
     public void EmulateCycle()
     {
         // Opcodes are 2 bytes
         // FirstByte leftshift by 8 - Makes space for the 2nd byte
         // Bitwise OR combines the bytes
+
         ushort opCode = (ushort)(Memory[ProgramCounter] << 8 | Memory[ProgramCounter + 1]);
+        ProgramCounter += 2;
 
         ushort nnn = (ushort)(opCode & 0x0FFF);
         byte kk = (byte)(opCode & 0x00FF);
@@ -79,9 +84,8 @@ public class Chip8
         byte y = (byte)((opCode & 0x00F0) >> 4);
         byte n = (byte)(opCode & 0x000F);
 
-        ProgramCounter += 2;
 
-        switch(opCode & 0xF000)
+        switch (opCode & 0xF000)
         {
             case 0x0000 when opCode == 0x00E0:
                 OpCodes._00E0(this);
@@ -127,6 +131,10 @@ public class Chip8
                 OpCodes._Cxkk(this, x, kk);
                 break;
 
+            case 0x5000:
+                OpCodes._5xy0(this, x, y);
+                break;
+
             case 0x8000 when (opCode & 0x000F) == 0:
                 OpCodes._8xy0(this, x, y);
                 break;
@@ -163,53 +171,57 @@ public class Chip8
                 OpCodes._9xy0(this, x, y);
                 break;
 
-            case 0xE000 when (opCode & 0xFF)  == 0x9E:
+            case 0xE000 when (opCode & 0x00FF)  == 0x9E:
                 OpCodes._Ex9E(this);
                 break;
 
-            case 0xE000 when (opCode & 0xFF)  == 0xA1:
+            case 0xE000 when (opCode & 0x00FF)  == 0xA1:
                 OpCodes._ExA1(this);
                 break;
 
-            case 0xF000 when (opCode & 0xFF ) == 0x07:
+            case 0xF000 when (opCode & 0x00FF ) == 0x07:
                 OpCodes._Fx07(this, x);
                 break;
 
-            case 0xF000 when (opCode & 0xFF ) == 0x0A:
+            case 0xF000 when (opCode & 0x00FF ) == 0x0A:
                 OpCodes._Fx0A(this);
                 break;
 
-            case 0xF000 when (opCode & 0xFF ) == 0x15:
+            case 0xF000 when (opCode & 0x00FF ) == 0x15:
                 OpCodes._Fx15(this, x);
                 break;
 
-            case 0xF000 when (opCode & 0xFF ) == 0x18:
+            case 0xF000 when (opCode & 0x00FF ) == 0x18:
                 OpCodes._Fx18(this, x);
                 break;
 
-            case 0xF000 when (opCode & 0xFF ) == 0x1E:
+            case 0xF000 when (opCode & 0x00FF ) == 0x1E:
                 OpCodes._Fx1E(this, x);
                 break;
 
-            case 0xF000 when (opCode & 0xFF ) == 0x29:
+            case 0xF000 when (opCode & 0x00FF ) == 0x29:
                 OpCodes._Fx29(this, x);
                 break;
             
-            case 0xF000 when (opCode & 0xFF) == 0x33:
+            case 0xF000 when (opCode & 0x00FF) == 0x33:
                 OpCodes._Fx33(this, x);
                 break;
 
-            case 0xF000 when (opCode & 0xFF ) == 0x55:
+            case 0xF000 when (opCode & 0x00FF ) == 0x55:
                 OpCodes._Fx55(this, x);
                 break;
 
-            case 0xF000 when (opCode & 0xFF ) == 0x65:
+            case 0xF000 when (opCode & 0x00FF ) == 0x65:
                 OpCodes._Fx65(this, x);
                 break;
 
-            default:
-                Console.WriteLine("Unknown Opcode");
+            case 0xD000:
+                OpCodes._Dxyn(this, x, y, n);
+                _window.Render();
                 break;
+
+            default:
+                    throw new InvalidOperationException($"error: Invalid OpCode: {opCode:X4} @ PC = 0x{ProgramCounter:X3}");
         }
     }
 }

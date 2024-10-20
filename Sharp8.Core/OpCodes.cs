@@ -53,7 +53,7 @@ public class OpCodes()
 
     public static void _6xkk(Chip8 chip8, byte x, byte kk)
     {
-        chip8.V[x] = (byte)kk;
+        chip8.V[x] = kk;
     }
 
     public static void _7xkk(Chip8 chip8, byte x, byte kk)
@@ -244,7 +244,7 @@ public class OpCodes()
                         chip8.V[0xF] = 1;
                     }
 
-                    chip8.Gfx[y * 64 + x] ^= 1;
+                    chip8.Gfx[yCord * 64 + xCord] ^= 1;
                 }
 
                 spriteByte <<= 0x1;
