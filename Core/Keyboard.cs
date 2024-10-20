@@ -1,6 +1,6 @@
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
-namespace Sharp8;
+namespace Sharp8.Core;
 public readonly struct Keyboard
 {
     public static Dictionary<Keys, byte> Map { get; } = new()

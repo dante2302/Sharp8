@@ -1,3 +1,4 @@
+using Sharp8.Core;
 namespace Sharp8.Tests;
 
 public class OpCodeTests 

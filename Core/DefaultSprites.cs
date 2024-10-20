@@ -1,6 +1,6 @@
 using System;
 
-namespace Sharp8;
+namespace Sharp8.Core;
 
 public readonly struct DefaultSprites
 {

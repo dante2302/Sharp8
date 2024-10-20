@@ -1,4 +1,4 @@
-namespace Sharp8;
+namespace Sharp8.Core;
 
 public class Chip8
 {
@@ -158,6 +158,10 @@ public class Chip8
 
             case 0x8000 when (opCode & 0x000F) == 6:
                 OpCodes._8xy6(this, x, y);
+                break;
+
+            case 0x8000 when (opCode & 0x000F) == 7:
+                OpCodes._8xy7(this, x, y);
                 break;
 
             case 0x8000 when (opCode & 0x000F) == 0xE:

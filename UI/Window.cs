@@ -3,12 +3,13 @@ using System.ComponentModel;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
+using Sharp8.Core;
 
-namespace Sharp8;
+namespace Sharp8.UI;
 
 public class Window : GameWindow, IWindow
 {
-    private readonly Chip8 chip8;
+    private Chip8 chip8;
     private bool isRunning;
     public Window(GameWindowSettings settings, NativeWindowSettings nativeSettings) : base(settings, nativeSettings)
     {
@@ -19,6 +20,7 @@ public class Window : GameWindow, IWindow
     private void On_FileDrop(FileDropEventArgs args)
     {
         string rom = args.FileNames[0];
+        chip8 = new(this);
         chip8.Run(rom);
         isRunning = true;
     }

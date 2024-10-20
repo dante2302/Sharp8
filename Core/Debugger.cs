@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Sharp8;
+namespace Sharp8.Core;
 
 public class Debugger(Chip8 chip8)
 {

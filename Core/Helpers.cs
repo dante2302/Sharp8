@@ -1,4 +1,4 @@
-namespace Sharp8;
+namespace Sharp8.Core;
 
 public abstract class Helpers
 {
