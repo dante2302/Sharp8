@@ -33,7 +33,8 @@ public class Window : GameWindow, IWindow
 
     public void Render()
     {
-        for(int y = 0; y < 32; y++)
+        GL.Clear(ClearBufferMask.ColorBufferBit);
+        for (int y = 0; y < 32; y++)
         {
             for(int x = 0; x < 64; x++)
             {

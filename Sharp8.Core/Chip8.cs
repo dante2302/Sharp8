@@ -1,11 +1,8 @@
-using System.Text;
-using OpenTK.Graphics.ES11;
-
 namespace Sharp8;
 
 public class Chip8
 {
-    private IWindow _window;
+    private readonly IWindow _window;
     // Memory
     private ushort RomStart { get; }
     public byte[] Memory { get; set; }
@@ -89,6 +86,7 @@ public class Chip8
         {
             case 0x0000 when opCode == 0x00E0:
                 OpCodes._00E0(this);
+                _window.Render();
                 break;
 
             case 0x0000 when opCode == 0x00EE:

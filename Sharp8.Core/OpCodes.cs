@@ -99,10 +99,11 @@ public class OpCodes()
 
     public static void _8xy4(Chip8 chip8, byte x, byte y)
     {
-        ushort sum = (ushort)(chip8.V[x] + chip8.V[y]);
-        if (sum > 255)
-            chip8.V[0xF] = (byte)(sum - 255);
-        chip8.V[x] = (byte)(sum & 0xFF);
+        if (chip8.V[y] > (0xFF - chip8.V[x]))
+            chip8.V[0xF] = 1; 
+        else 
+            chip8.V[0xF] = 0;
+        chip8.V[x] += chip8.V[y];
     }
 
     public static void _8xy5(Chip8 chip8, byte x, byte y)
@@ -123,12 +124,10 @@ public class OpCodes()
 
     public static void _8xy7(Chip8 chip8, byte x, byte y)
     {
-        if (chip8.V[y] > chip8.V[x])
-            chip8.V[0xF] = 1;
-        else
-            chip8.V[0xF] = 0;
+        int difference = chip8.V[y] - chip8.V[x];
+        chip8.V[0xF] = (byte)(difference > 0 ? 1 : 0);
 
-        chip8.V[x] = (byte)(chip8.V[x] - chip8.V[y]);
+        chip8.V[x] = (byte)(difference & 0xFF);
     }
 
     public static void _8xyE(Chip8 chip8, byte x, byte y)
@@ -197,7 +196,7 @@ public class OpCodes()
     {
         int value = chip8.V[x];
         byte firstDigit = (byte)(value / 100);
-        byte secondDigit = (byte)(value / 10 % 10);
+        byte secondDigit = (byte)((value / 10) % 10);
         byte thirdDigit = (byte)(value % 10);
 
         chip8.Memory[chip8.I] = firstDigit;
