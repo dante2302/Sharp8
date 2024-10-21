@@ -8,13 +8,13 @@ public readonly struct WindowSettings
 {
     public static GameWindowSettings GameSettings { get; } = new()
     {
-        UpdateFrequency =  400
+        UpdateFrequency =  900
     };
 
     public static NativeWindowSettings NativeSettings { get; } = new()
     {
         ClientSize = new Vector2i(1280, 640),
         Profile = ContextProfile.Compatability,
-        Title = "Chip8 Emulator"
+        Title = "Sharp8"
     };
 }

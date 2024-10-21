@@ -5,8 +5,8 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using Sharp8.Core;
 using System.Runtime.InteropServices;
-using System.Diagnostics;
 using UI;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Sharp8.UI;
 
@@ -14,8 +14,13 @@ public class Window : GameWindow, IWindow
 {
     private Chip8 chip8;
     private bool isRunning;
+    private bool pongMode = false;
     public Window(GameWindowSettings settings, NativeWindowSettings nativeSettings) : base(settings, nativeSettings)
     {
+        string[] args = Environment.GetCommandLineArgs();
+        if(args.Contains("pong"))
+            pongMode = true;
+
         chip8 = new(this);
         FileDrop += On_FileDrop;
     }
@@ -52,8 +57,6 @@ public class Window : GameWindow, IWindow
         SwapBuffers();
     }
 
-
-
     protected override void OnLoad()
     {
         base.OnLoad();
@@ -71,10 +74,17 @@ public class Window : GameWindow, IWindow
         if(isRunning) chip8.EmulateCycle();
     }
 
+    public KeyboardState GetKeyboardState()
+    {
+        return KeyboardState.GetSnapshot();
+    }
+
     protected override void OnKeyUp(KeyboardKeyEventArgs e)
     {
         base.OnKeyUp(e);
-        if(Keyboard.Chip8.TryGetValue(e.Key, out byte byteValue))
+        var keymap = pongMode ? Chip8Keyboard.PongMap : Chip8Keyboard.OriginalMap;
+        if(
+            keymap.TryGetValue(e.Key, out byte byteValue))
         {
             chip8.OnKeyUp(byteValue);
         }
@@ -83,7 +93,8 @@ public class Window : GameWindow, IWindow
     protected override void OnKeyDown(KeyboardKeyEventArgs e)
     {
         base.OnKeyDown(e);
-        if(Keyboard.Chip8.TryGetValue(e.Key, out byte byteValue))
+        var keymap = pongMode ? Chip8Keyboard.PongMap : Chip8Keyboard.OriginalMap;
+        if(keymap.TryGetValue(e.Key, out byte byteValue))
         {
             chip8.OnKeyDown(byteValue);
         }

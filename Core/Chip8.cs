@@ -25,6 +25,7 @@ public class Chip8
     public ushort[] Stack { get; set; }
 
     public bool[] Keys { get; set; }
+    private int CycleCounter { get; set; }
 
     public Chip8(IWindow window)
     {
@@ -44,6 +45,7 @@ public class Chip8
         ProgramCounter = RomStart;
 
         Keys = new bool[16];
+        CycleCounter = 0;
         //Setup Fonts
         Array.Copy(DefaultSprites.FontSet, 0, Memory, 0x0, DefaultSprites.FontSet.Length);
     }
@@ -75,14 +77,12 @@ public class Chip8
 
     public void OnKeyUp(byte key)
     {
-        Console.WriteLine($"Key UnPressed: {key:X4}");
         Keys[key] = false;
     }
 
     public void OnKeyDown(byte key)
     {
         Keys[key] = true;
-        Console.WriteLine($"Key Pressed: {key:X4}");
     }
 
     public void EmulateCycle()
@@ -101,7 +101,13 @@ public class Chip8
         byte n = (byte)(opCode & 0x000F);
 
         DecryptAndExecuteOpCode(opCode, nnn, kk, x, y, n);
-        UpdateTimers();
+
+        //Update Frequency is set to 900, Chip8 timers update every 60hz
+        if (CycleCounter / 15 == 0) 
+        {
+            CycleCounter = 0;
+            UpdateTimers();
+        }
     }
 
     private void UpdateTimers()

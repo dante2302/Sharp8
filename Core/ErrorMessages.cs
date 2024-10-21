@@ -8,7 +8,7 @@ public struct ErrorMessages
             -----------------------------------
             -   ROM is too big                - 
             -   Max ROM size: {maxRomSize}    -
-            -   Your ROM size: {romLength}
+            -   Your ROM size: {romLength}    -
             -----------------------------------";
     }
 

@@ -1,9 +1,10 @@
+using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Sharp8.Core;
-public readonly struct Keyboard
+public readonly struct Chip8Keyboard
 {
-    public static Dictionary<Keys, byte> Chip8 { get; } = new()
+    public static Dictionary<Keys, byte> OriginalMap { get; } = new()
     {
         { Keys.D0, 0x0 },
         { Keys.D1, 0x1 },
@@ -21,5 +22,13 @@ public readonly struct Keyboard
         { Keys.D, 0xD },
         { Keys.E, 0xE },
         { Keys.F, 0xF },
+    };
+
+    public static Dictionary<Keys, byte> PongMap { get; } = new()
+    {
+        {Keys.W, 0x1},
+        {Keys.S, 0x4},
+        {Keys.Up, 0xC},
+        {Keys.Down, 0xD}
     };
 }
