@@ -73,6 +73,18 @@ public class Chip8
     }
 
 
+    public void OnKeyUp(byte key)
+    {
+        Console.WriteLine($"Key UnPressed: {key:X4}");
+        Keys[key] = false;
+    }
+
+    public void OnKeyDown(byte key)
+    {
+        Keys[key] = true;
+        Console.WriteLine($"Key Pressed: {key:X4}");
+    }
+
     public void EmulateCycle()
     {
         // Opcodes are 2 bytes
@@ -88,8 +100,22 @@ public class Chip8
         byte y = (byte)((opCode & 0x00F0) >> 4);
         byte n = (byte)(opCode & 0x000F);
 
-        // Console.WriteLine($"OpCode: {opCode:X4}");
-        // Console.ReadLine();
+        DecryptAndExecuteOpCode(opCode, nnn, kk, x, y, n);
+        UpdateTimers();
+    }
+
+    private void UpdateTimers()
+    {
+        if (DelayTimer > 0) DelayTimer--;
+        if (SoundTimer > 0) 
+        {
+            //BEEP
+            SoundTimer--;
+        }
+    }
+
+    private void DecryptAndExecuteOpCode(ushort opCode, ushort nnn, byte kk, byte x, byte y, byte n)
+    {
         switch (opCode & 0xF000)
         {
             case 0x0000 when opCode == 0x00E0:
@@ -180,47 +206,48 @@ public class Chip8
                 OpCodes._9xy0(this, x, y);
                 break;
 
-            case 0xE000 when (opCode & 0x00FF)  == 0x9E:
+            case 0xE000 when (opCode & 0x00FF) == 0x9E:
                 OpCodes._Ex9E(this, x);
                 break;
 
-            case 0xE000 when (opCode & 0x00FF)  == 0xA1:
+            case 0xE000 when (opCode & 0x00FF) == 0xA1:
                 OpCodes._ExA1(this, x);
                 break;
 
-            case 0xF000 when (opCode & 0x00FF ) == 0x07:
+            case 0xF000 when (opCode & 0x00FF) == 0x07:
                 OpCodes._Fx07(this, x);
                 break;
 
-            case 0xF000 when (opCode & 0x00FF ) == 0x0A:
-                OpCodes._Fx0A(this);
+            case 0xF000 when (opCode & 0x00FF) == 0x0A:
+                // Wait for a key press
+                OpCodes._Fx0A(this, x);
                 break;
 
-            case 0xF000 when (opCode & 0x00FF ) == 0x15:
+            case 0xF000 when (opCode & 0x00FF) == 0x15:
                 OpCodes._Fx15(this, x);
                 break;
 
-            case 0xF000 when (opCode & 0x00FF ) == 0x18:
+            case 0xF000 when (opCode & 0x00FF) == 0x18:
                 OpCodes._Fx18(this, x);
                 break;
 
-            case 0xF000 when (opCode & 0x00FF ) == 0x1E:
+            case 0xF000 when (opCode & 0x00FF) == 0x1E:
                 OpCodes._Fx1E(this, x);
                 break;
 
-            case 0xF000 when (opCode & 0x00FF ) == 0x29:
+            case 0xF000 when (opCode & 0x00FF) == 0x29:
                 OpCodes._Fx29(this, x);
                 break;
-            
+
             case 0xF000 when (opCode & 0x00FF) == 0x33:
                 OpCodes._Fx33(this, x);
                 break;
 
-            case 0xF000 when (opCode & 0x00FF ) == 0x55:
+            case 0xF000 when (opCode & 0x00FF) == 0x55:
                 OpCodes._Fx55(this, x);
                 break;
 
-            case 0xF000 when (opCode & 0x00FF ) == 0x65:
+            case 0xF000 when (opCode & 0x00FF) == 0x65:
                 OpCodes._Fx65(this, x);
                 break;
 
@@ -230,9 +257,9 @@ public class Chip8
                 break;
 
             default:
-                    throw new InvalidOperationException(
-                        ErrorMessages.InvalidOpcode(opCode, ProgramCounter)
-                    );
+                throw new InvalidOperationException(
+                    ErrorMessages.InvalidOpcode(opCode, ProgramCounter)
+                );
         }
     }
 }

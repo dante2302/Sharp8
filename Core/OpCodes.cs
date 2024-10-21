@@ -166,8 +166,19 @@ public class OpCodes()
         chip8.V[x] = chip8.DelayTimer;
     }
 
-    public static void _Fx0A(Chip8 chip8)
+    public static void _Fx0A(Chip8 chip8, byte x)
     {
+        while (true)
+        {
+            for (byte i = 0; i < 0xF; i++)
+            {
+                if (chip8.Keys[i])
+                {
+                    chip8.V[x] = i;
+                    return;
+                }
+            }
+        }
     }
 
     public static void _Fx15(Chip8 chip8, byte x)

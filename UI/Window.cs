@@ -4,6 +4,9 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using Sharp8.Core;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
+using UI;
 
 namespace Sharp8.UI;
 
@@ -20,6 +23,8 @@ public class Window : GameWindow, IWindow
     private void On_FileDrop(FileDropEventArgs args)
     {
         string rom = args.FileNames[0];
+        Beep();
+        Console.WriteLine("beep");
         chip8 = new(this);
         chip8.Run(rom);
         isRunning = true;
@@ -47,10 +52,7 @@ public class Window : GameWindow, IWindow
         SwapBuffers();
     }
 
-    public void Beep()
-    {
-        // To Be Implemented
-    }
+
 
     protected override void OnLoad()
     {
@@ -69,22 +71,35 @@ public class Window : GameWindow, IWindow
         if(isRunning) chip8.EmulateCycle();
     }
 
-    protected override void OnKeyDown(KeyboardKeyEventArgs e)
-    {
-        base.OnKeyDown(e);
-        if(Keyboard.Map.TryGetValue(e.Key, out byte byteValue))
-        {
-            // input key into chip8
-        }
-    }
-
     protected override void OnKeyUp(KeyboardKeyEventArgs e)
     {
         base.OnKeyUp(e);
-        if(Keyboard.Map.TryGetValue(e.Key, out byte byteValue))
+        if(Keyboard.Chip8.TryGetValue(e.Key, out byte byteValue))
         {
-            // input key into chip8
+            chip8.OnKeyUp(byteValue);
         }
+    }
+
+    protected override void OnKeyDown(KeyboardKeyEventArgs e)
+    {
+        base.OnKeyDown(e);
+        if(Keyboard.Chip8.TryGetValue(e.Key, out byte byteValue))
+        {
+            chip8.OnKeyDown(byteValue);
+        }
+    }
+
+    public void Beep()
+    {
+        var linux = OSPlatform.Linux;
+        var windows = OSPlatform.Windows;
+        var IsOS = RuntimeInformation.IsOSPlatform;
+
+        if(IsOS(linux))
+            SoundManager.PlayLinuxSound();
+
+        else if(IsOS(windows))
+            SoundManager.PlayWindowsSound();
     }
 
     protected override void OnClosing(CancelEventArgs e)

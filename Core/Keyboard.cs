@@ -3,7 +3,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 namespace Sharp8.Core;
 public readonly struct Keyboard
 {
-    public static Dictionary<Keys, byte> Map { get; } = new()
+    public static Dictionary<Keys, byte> Chip8 { get; } = new()
     {
         { Keys.D0, 0x0 },
         { Keys.D1, 0x1 },
