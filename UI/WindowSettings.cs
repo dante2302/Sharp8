@@ -8,7 +8,7 @@ public readonly struct WindowSettings
 {
     public static GameWindowSettings GameSettings { get; } = new()
     {
-        UpdateFrequency = 60 
+        UpdateFrequency =  400
     };
 
     public static NativeWindowSettings NativeSettings { get; } = new()

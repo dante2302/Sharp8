@@ -1,3 +1,5 @@
+using Core;
+
 namespace Sharp8.Core;
 
 public class Chip8
@@ -22,6 +24,8 @@ public class Chip8
 
     public ushort[] Stack { get; set; }
 
+    public bool[] Keys { get; set; }
+
     public Chip8(IWindow window)
     {
         _window = window;
@@ -39,6 +43,7 @@ public class Chip8
         StackPointer = 0;
         ProgramCounter = RomStart;
 
+        Keys = new bool[16];
         //Setup Fonts
         Array.Copy(DefaultSprites.FontSet, 0, Memory, 0x0, DefaultSprites.FontSet.Length);
     }
@@ -46,9 +51,12 @@ public class Chip8
 
     public void Run(byte[] rom)
     {
-        if(rom.Length > Memory.Length - RomStart)
+        int maxRomSize = Memory.Length- RomStart;
+        if(rom.Length > maxRomSize)
         {
-            return;
+            throw new InvalidDataException(
+                ErrorMessages.ROMSizeTooBig(maxRomSize, rom.Length)
+            );
         }
         // Setup ROM
         Array.Copy(rom,0, Memory, RomStart, rom.Length);
@@ -173,7 +181,7 @@ public class Chip8
                 break;
 
             case 0xE000 when (opCode & 0x00FF)  == 0x9E:
-                OpCodes._Ex9E(this);
+                OpCodes._Ex9E(this, x);
                 break;
 
             case 0xE000 when (opCode & 0x00FF)  == 0xA1:
@@ -222,7 +230,9 @@ public class Chip8
                 break;
 
             default:
-                    throw new InvalidOperationException($"error: Invalid OpCode: {opCode:X4} @ PC = 0x{ProgramCounter:X3}");
+                    throw new InvalidOperationException(
+                        ErrorMessages.InvalidOpcode(opCode, ProgramCounter)
+                    );
         }
     }
 }
