@@ -109,7 +109,7 @@ public class Chip8
         if (DelayTimer > 0) DelayTimer--;
         if (SoundTimer > 0) 
         {
-            //BEEP
+            _window.Beep();
             SoundTimer--;
         }
     }

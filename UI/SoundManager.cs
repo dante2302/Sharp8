@@ -15,11 +15,21 @@ public class SoundManager
                 Arguments = "./beep.mp3",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
-                CreateNoWindow = true
+                CreateNoWindow = true,
+                RedirectStandardError = true,
             }
         };
-        process.Start();
-        process.WaitForExit();
+
+        try
+        {
+            process.Start();
+            string errorOutput = process.StandardError.ReadToEnd();
+            Console.WriteLine(errorOutput);
+            return;
+        }
+        catch 
+        {
+        }
     }
 
     public static void PlayWindowsSound()
