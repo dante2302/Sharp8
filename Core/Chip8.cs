@@ -185,7 +185,7 @@ public class Chip8
                 break;
 
             case 0xE000 when (opCode & 0x00FF)  == 0xA1:
-                OpCodes._ExA1(this);
+                OpCodes._ExA1(this, x);
                 break;
 
             case 0xF000 when (opCode & 0x00FF ) == 0x07:

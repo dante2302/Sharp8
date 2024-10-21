@@ -147,20 +147,18 @@ public class OpCodes()
 
     // Ex and Fx BLOCK
 
-    public static void _Ex9E(Chip8 chip8)
+    public static void _Ex9E(Chip8 chip8, byte x)
     {
-        // // Yet To Implement
-        // bool keyIsPressed;
-        // if(keyIsPressed)
-        //     chip8.ProgramCounter += 2;
+        bool keyIsPressed = chip8.Keys[chip8.V[x]];
+        if(keyIsPressed)
+            chip8.ProgramCounter += 2;
     }
 
-    public static void _ExA1(Chip8 chip8)
+    public static void _ExA1(Chip8 chip8, byte x)
     {
-        // // Yet To Implement
-        // bool keyIsPressed;
-        // if(!keyIsPressed)
-        //     chip8.ProgramCounter += 2;
+        bool keyIsPressed = chip8.Keys[chip8.V[x]];
+        if(!keyIsPressed)
+            chip8.ProgramCounter += 2;
     }
 
     public static void _Fx07(Chip8 chip8, byte x)
